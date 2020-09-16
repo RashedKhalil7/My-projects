@@ -1,0 +1,32 @@
+here i write some note.
+
+all_sprite = pygame.sprite.Group()
+this line of code doing list from sprite like enemy , space , alien
+
+while True :
+	.......
+	......
+	all_sprite.update()
+	this mean update all_sprite on the window 
+
+	....
+	when we need to draw all_sprite on the screen we write
+	all_sprite.draw(screen)
+	screen means pygame.display.set_mode((w , h))
+
+collidepoint(mouse_pos)
+text = pygame.rect(x, y, w,h)
+checking if text.collidepoint(mouse_pos):
+	drawing botton
+	plaplaplap
+
+Here we go again :) 
+for ev in pygame.event.get():
+	if ev.type == pygame.KEYDOWN:
+		user_text += ev.unicode
+#these three lines of code record all things you typing it with your keyboard
+when we wanna delete any letter we will use this code
+if ev.key == pygame.backspace:
+	user_text = user_text[:-1]
+
+I'm gonna make Pause option in snake game

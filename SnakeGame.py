@@ -12,7 +12,6 @@ def gameLoop(perm):
 	#variable
 	apple = pygame.image.load('GameImage/Apple.jpg')
 	bgImage = pygame.image.load('GameImage/SnakeBgroud.jpg')
-	eat_music = pygame.mixer.music.load('GameSounds/eat.mp3')
 	bgsound = pygame.mixer.Sound('GameSounds/sound.wav')
 	bgsound.set_volume(0.2)
 	apple = pygame.transform.scale(apple , [20 , 20])
@@ -71,7 +70,6 @@ def gameLoop(perm):
 			pygame.draw.rect(win , WHITE , [WIDTH/2-50 , 50 , 100 , 20])
 			pygame.draw.rect(win , WHITE , [WIDTH/2-50 , 90 , 100 , 20])
 			pygame.draw.rect(win , WHITE, [WIDTH/2-50, 130 , 100 , 20]) 
-		bgsound.play()
 		start = font.render('START' , True , BLACK)			
 		menu = big_font.render('MAIN MENU' , True , BLACK , BLUE)
 		quit = font.render('QUIT' , True , BLACK)
@@ -105,14 +103,15 @@ def gameLoop(perm):
 		clock.tick(20)
 		x, y = pygame.mouse.get_pos()
 		while game_over:
+			bgsound.play()
 			pygame.display.update()
 			win.blit(menuImage , (0,0))
 			mouse =pygame.mouse.get_pos()
 			for event in pygame.event.get():
 				if event.type == pygame.MOUSEBUTTONDOWN:
 					if WIDTH/2-50 <= mouse[0]<=WIDTH/2+50 and 50 <=mouse[1] <=70:
-						gameLoop(False)
 						bgsound.stop()
+						gameLoop(False)
 					if WIDTH/2-50 <= mouse[0]<=WIDTH/2+50 and 90 <=mouse[1] <=110:
 						Save_Score(score)
 					if WIDTH/2-50 <= mouse[0]<=WIDTH/2+50 and 130 <=mouse[1] <=150:
@@ -125,7 +124,6 @@ def gameLoop(perm):
 					run = False
 
 			MENU()
-
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				exit()
@@ -168,7 +166,6 @@ def gameLoop(perm):
 			y_food =randrange(20 , 460 , 20)
 			lenght +=1
 			score +=5
-			pygame.mixer.music.play(0)
 
 		if x_pos <= 0 or x_pos>= 640 or  y_pos >= 460 or y_pos <=10:
 			LostMessage()

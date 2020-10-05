@@ -1,27 +1,41 @@
 #IMPORT AND INITIALS
-import pygame , math , time
+import pygame ,time,sys
 from random import randint , randrange
 pygame.init()
 pygame.mixer.init()
+per=True
+m=False
 
-def main():
+def main(per , m):
 	W , H = 700 , 580
 	win= pygame.display.set_mode((W , H))
-	pygame.display.set_caption('Space Invader')
+	pygame.display.set_caption('Space War')
 	#All game images
 	spaceImage = pygame.image.load('GameImage/spaceInvader.png')
-	alienImage = pygame.image.load('GameImage/alien.png')
+	alienImage = pygame.image.load('GameImage/alien.png').convert()
 	bulletImage = pygame.image.load('GameImage/bullet.png')
-	bgImage = pygame.image.load('GameImage/stars_bg.jpeg')
-	player = pygame.image.load('GameImage/spaceship.png')
+	bgImage = pygame.image.load('GameImage/bg5.jpg')
+	player = pygame.image.load('GameImage/spaceship.png').convert()
+	Menu_image = pygame.image.load('GameImage/bkg.png')
+	start = pygame.image.load('GameImage/buttons-2/start-2.png')
+	helper = pygame.image.load('GameImage/buttons-2/help-2.png')
+	about = pygame.image.load('GameImage/buttons-2/about-2.png')
+	exit = pygame.image.load('GameImage/buttons-2/exit-2.png')
+	rect = start.get_rect()
+	BLACK=(0,0,0)
 	playerImage = pygame.transform.scale(player , [70 , 70])
+	playerImage.set_colorkey(BLACK)
 	bgImage = pygame.transform.scale(bgImage , [700 , 580])
+	Menu_image = pygame.transform.scale(Menu_image, [700 , 580])
+	alienImage.set_colorkey(BLACK)
 	#Game sounds and music
 	shoot_sound = pygame.mixer.Sound('GameSounds/pew.wav')
 	expl_sound = pygame.mixer.Sound('GameSounds/expl3.wav')
 	expl2_sound = pygame.mixer.Sound('GameSounds/expl6.wav')
-	pygame.mixer.music.load('GameSounds/gamesound.ogg')
-	pygame.mixer.music.set_volume(0.4)
+	pygame.mixer.music.load('GameSounds/06_battle_in_space_intro.ogg')
+	menu_music = pygame.mixer.Sound('GameSounds/gamesound.ogg')
+	pygame.mixer.music.set_volume(0.8)
+	menu_music.set_volume(0.1)
 
 	#CLASS AND FUNCIONS
 	class Player(pygame.sprite.Sprite):
@@ -32,8 +46,7 @@ def main():
 			self.speed = 0
 			self.rect.centerx = W/2
 			self.rect.bottom = H-10
-			self.health = 3
-			self.shoot_delay = 250
+			self.shoot_delay = 300
 			self.last_shoot = pygame.time.get_ticks()
 			self.shield = 100
 
@@ -117,8 +130,8 @@ def main():
 
 	def drawing():
 		win.blit(bgImage , (0 , 0))
-		win.blit(live , (W-40 , 5))
 		draw_live(player.shield)
+		win.blit(live , (W-110 , 5))
 		win.blit(text , (5 , 5))
 		all_sprite.update()
 		all_sprite.draw(win)
@@ -126,6 +139,14 @@ def main():
 		aliens.draw(win)
 		bullets.update()
 		bullets.draw(win)
+		pygame.display.update()
+
+	def MENU():
+		win.blit(Menu_image , [0,0])
+		win.blit(start , [w ,100 ])
+		win.blit(helper , [w,180])
+		win.blit(about , [w,260])
+		win.blit(exit , [w , 340])
 		pygame.display.update()
 
 	def draw_live(pec):
@@ -146,7 +167,7 @@ def main():
 	aliens = pygame.sprite.Group()
 	bullets = pygame.sprite.Group()
 	for i in range(5):
-		aliens.add(Alien())
+		Create_Alien()
 	player = Player()
 	all_sprite.add(player)
 	score = 0
@@ -158,15 +179,22 @@ def main():
 	for i in range(9):
 		img = pygame.image.load('GameImage/Explosions_kenney/regularExplosion0{}.png'.format(i))
 		img_lg = pygame.transform.scale(img , [75,75])
-		img_lg.set_colorkey((0,0,0))
+		img_lg.set_colorkey(BLACK)
 		explosion_img[1].append(img_lg)
 		img_sm = pygame.transform.scale(img , [32,32])
 		explosion_img[0].append(img_sm)
+	w = W//2-rect.width//2
+	start_rect=pygame.Rect(w,100,rect.width , rect.height)
+	help_rect = pygame.Rect(w,180 , rect.width,rect.height)
+	about_rect = pygame.Rect(w,260,rect.width,rect.height)
+	exit_rect = pygame.Rect(w,340,rect.width,rect.height)
+	if m:
+		pygame.mixer.music.play(loops=-1)
 	GREEN=(0,255,0)
 	WHITE=(255,255,255)
 	RED = (255,0,0)
-	pygame.mixer.music.play(loops=-1)
 	clock = pygame.time.Clock()
+	game_over = per
 	run = True
 	FPS = 30
 	#MAINLOOP
@@ -174,14 +202,38 @@ def main():
 		clock.tick(FPS)
 		text = make_font.render(f'Score :{score}' , True , (255,255,255))
 		live = live_font.render(f'{player.shield}%' , True , (255,255,255))
+		#GAME MENU 
+		while game_over:
+			MENU()
+			menu_music.play()
+			pygame.mixer.music.stop()
+			mouse = pygame.mouse.get_pos()
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					sys.exit()
+				if event.type ==pygame.MOUSEBUTTONDOWN:
+					if start_rect.collidepoint(mouse):
+						menu_music.stop()
+						main(False,True)
+					if help_rect.collidepoint(mouse):
+						pass
+					if exit_rect.collidepoint(mouse):
+						pygame.quit()
+						sys.exit()
+					if about_rect.collidepoint(mouse):
+						pass
+
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
-				run = False
+				pygame.quit()
+				sys.exit()
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_SPACE:
 					player.shoot()
+			elif event.type == pygame.MOUSEBUTTONDOWN:
+				pass
 
-		hit = pygame.sprite.spritecollide(player , aliens , True)
+		hit = pygame.sprite.spritecollide(player , aliens,True)
 		if hit:
 			player.shield -=20
 			for h in hit:
@@ -189,7 +241,8 @@ def main():
 				all_sprite.add(expl)
 				expl2_sound.play()
 		if player.shield == 0:
-			run = False
+			time.sleep(3)
+			game_over=True
 		hits = pygame.sprite.groupcollide(aliens , bullets , True , True)
 		if hits:
 			score +=5
@@ -198,9 +251,11 @@ def main():
 			all_sprite.add(expl)
 			expl_sound.play()
 			Create_Alien()
+		if player.shield==0:
+			pass
 
 		drawing()
 	pygame.quit()
 
 if __name__ == '__main__':
-	main()
+	main(per,m)

@@ -116,12 +116,9 @@ def gameLoop(perm):
 						Save_Score(score)
 					if WIDTH/2-50 <= mouse[0]<=WIDTH/2+50 and 130 <=mouse[1] <=150:
 						exit()
-						game_over = False
-						run = False
+						
 				if event.type == pygame.QUIT:
 					exit()
-					game_over = False
-					run = False
 
 			MENU()
 		for event in pygame.event.get():

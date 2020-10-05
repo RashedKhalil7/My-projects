@@ -4,6 +4,7 @@ pygame.init()
 win = pygame.display.set_mode((500 , 500))
 font = pygame.font.Font(None , 25)
 user_text = ''
+save = ''
 input_rect = pygame.Rect(200 , 220 , 140 , 30)
 
 run = True
@@ -14,6 +15,10 @@ while run:
 		if ev.type == pygame.KEYDOWN:
 			if ev.key == pygame.K_BACKSPACE:
 				user_text = user_text[:-1]
+			elif ev.key == pygame.K_ENTER:
+				save = user_text
+				user_text = ''
+				print(save)
 			else:
 				user_text += ev.unicode
 

@@ -202,7 +202,7 @@ def main(per , m):
 		for i , text in enumerate(f.readlines()):
 			dic[i]=text
 		f.close()
-		dic[0] = dic[0][:-2]
+		dic[0] = dic[0][:-1]
 
 		m = make_font.render('name', True , WHITE)
 		win.blit(Menu_image , [0,0])

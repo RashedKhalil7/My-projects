@@ -100,7 +100,7 @@ def gameLoop(perm):
 	#main loopb
 	clock = pygame.time.Clock()
 	while run:
-		clock.tick(20)
+		clock.tick(14)
 		x, y = pygame.mouse.get_pos()
 		while game_over:
 			bgsound.play()

@@ -15,7 +15,7 @@ while run:
 		if ev.type == pygame.KEYDOWN:
 			if ev.key == pygame.K_BACKSPACE:
 				user_text = user_text[:-1]
-			elif ev.key == pygame.K_ENTER:
+			elif ev.key == pygame.K_RETURN:
 				save = user_text
 				user_text = ''
 				print(save)
